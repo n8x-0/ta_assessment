@@ -1,6 +1,8 @@
 const Home = () => {
   return (
-    <div>Home</div>
+    <div className="container py-5 d-flex justify-content-center align-items-center">
+
+    </div>
   )
 }
 

@@ -1,6 +1,6 @@
 const History = () => {
   return (
-    <div>History</div>
+    <div className="container py-5">History</div>
   )
 }
 
