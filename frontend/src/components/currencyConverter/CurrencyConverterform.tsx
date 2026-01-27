@@ -4,6 +4,7 @@ import Loader from "../shared/Loader.tsx";
 import { getExchangeRate } from "../../utils/services.ts";
 import DateButton from "./DatePicker.tsx";
 import { CurrencyConvertorContext, type CurrencyConvertorContextType } from "../../context/currencyConvertor/context.tsx";
+import localStorageService from "../../utils/localStorageService.ts";
 
 interface CurrencyConverterformProps {
   isLoading: boolean;
@@ -22,7 +23,7 @@ const CurrencyConverterform = ({ isLoading, error, currenciesData }: CurrencyCon
   const [currencies, setCurrencies] = useState<string[]>([]);
   const [activeSide, setActiveSide] = useState<"from" | "to">("from");
   const [rate, setRate] = useState<number>(0);
-  const {exchangeRateDate} = useContext(CurrencyConvertorContext) as CurrencyConvertorContextType;
+  const {exchangeRateDate, convertedCurrencyHistory, setConvertedCurrencyHistory} = useContext(CurrencyConvertorContext) as CurrencyConvertorContextType;
 
   const { register, watch, setValue } = useForm<FormFields>({
     defaultValues: {
@@ -50,16 +51,27 @@ const CurrencyConverterform = ({ isLoading, error, currenciesData }: CurrencyCon
 
     getExchangeRate(fromCurrency, toCurrency, exchangeRateDate as string | undefined).then((res: any) => {
       if (cancelled) return;
-
-      const nextRate = Number(res?.data?.[toCurrency] ?? res?.data?.data?.[toCurrency]);
+      const nextRate = Number(res?.[toCurrency] ?? res?.data?.[toCurrency]);
 
       setRate(Number.isFinite(nextRate) ? nextRate : 0);
     });
-
+    if(!fromCurrencyValue && !toCurrencyValue) return () => {cancelled = true;};
+    if(convertedCurrencyHistory[0]){
+      const localStorageItems = localStorageService.getItem("currencyConverter") || [];
+      const localStorageHealth = localStorageItems?.length;
+        if (localStorageHealth > 21) {
+            setConvertedCurrencyHistory((prev) => [...prev.slice(-20), { date: new Date().toISOString(), value:`Converter from ${fromCurrencyValue} ${fromCurrency} to ${toCurrencyValue} ${toCurrency} as of ${exchangeRateDate}` }]);
+        }
+      setConvertedCurrencyHistory((prev) => [...prev, { date: new Date().toISOString(), value:`Converter from ${fromCurrencyValue} ${fromCurrency} to ${toCurrencyValue} ${toCurrency} as of ${exchangeRateDate}` }]);
+    }else{
+      setConvertedCurrencyHistory([{ date: new Date().toISOString(), value:`Converter from ${fromCurrencyValue} ${fromCurrency} to ${toCurrencyValue} ${toCurrency} as of ${exchangeRateDate}` }]);
+    }
+    localStorageService.setItem("currencyConverter", convertedCurrencyHistory);
+    
     return () => {
       cancelled = true;
     };
-  }, [fromCurrency, toCurrency]);
+  }, [fromCurrency, toCurrency, exchangeRateDate]);
 
   useEffect(() => {
     if (!rate) return;

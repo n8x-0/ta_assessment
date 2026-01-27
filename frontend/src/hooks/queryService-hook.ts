@@ -33,7 +33,7 @@ const useCustomQuery = (queryService: (...params: any) => Promise<any>, ...query
         dispatch({type: "CALL"})
         ;(async ()=> {
             try {
-                const data = await queryService(...queryParams);
+                const data = await queryService(...queryParams, {signal: controller.signal});
                 dispatch({type: "SUCCESS", payload: data.data})
             } catch (error) {
                 if(axios.isCancel(error)){
