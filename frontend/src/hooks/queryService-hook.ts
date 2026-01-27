@@ -24,7 +24,7 @@ const reducer = (state: CustomQueryHookState, action: {type: string, payload?: a
             return state
     }
 }
-export const useCustomQuery = (queryService: (...params: any) => Promise<any>, ctx?: any, ...queryParams: any) => {
+const useCustomQuery = (queryService: (...params: any) => Promise<any>, ...queryParams: any) => {
     const [state, dispatch] = useReducer(reducer, initialState);
     
     useEffect(() => {
@@ -34,7 +34,7 @@ export const useCustomQuery = (queryService: (...params: any) => Promise<any>, c
         ;(async ()=> {
             try {
                 const data = await queryService(...queryParams);
-                dispatch({type: "SUCCESS", payload: data})
+                dispatch({type: "SUCCESS", payload: data.data})
             } catch (error) {
                 if(axios.isCancel(error)){
                     dispatch({type: "ERROR", payload: "Request Canceled"})
@@ -52,3 +52,5 @@ export const useCustomQuery = (queryService: (...params: any) => Promise<any>, c
 
     return {...state}
 }
+
+export default useCustomQuery
