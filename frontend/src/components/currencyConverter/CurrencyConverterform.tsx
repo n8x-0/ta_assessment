@@ -5,6 +5,7 @@ import { getExchangeRate } from "../../utils/services.ts";
 import DateButton from "./DatePicker.tsx";
 import { CurrencyConvertorContext, type CurrencyConvertorContextType } from "../../context/currencyConvertor/context.tsx";
 import localStorageService from "../../utils/localStorageService.ts";
+import { Row, Col, Stack, InputGroup, Form } from "react-bootstrap";
 
 interface CurrencyConverterformProps {
   isLoading: boolean;
@@ -103,63 +104,129 @@ const CurrencyConverterform = ({ isLoading, error, currenciesData }: CurrencyCon
         name="main-content"
         mode={isLoading || error ? "hidden" : "visible"}
         children={
-          <div className="">
+          <div>
             <div className="d-flex justify-content-between align-items-end my-3">
-                <div>
-                    <span className="fs-5">
-                        {fromCurrencyValue?.toFixed(2) ?? 0} {currenciesData && currenciesData[fromCurrency]?.name} equals
-                    </span>
-                    <h1 className="">
-                        {toCurrencyValue?.toFixed(2) ?? 0} {currenciesData && currenciesData[toCurrency]?.name}
-                    </h1>
-                </div>
-                <DateButton />
+              <div>
+                <span className="fs-5">
+                  {fromCurrencyValue?.toFixed(2) ?? 0}{" "}
+                  {currenciesData && currenciesData[fromCurrency]?.name} equals
+                </span>
+                <h1 className="">
+                  {toCurrencyValue?.toFixed(2) ?? 0}{" "}
+                  {currenciesData && currenciesData[toCurrency]?.name}
+                </h1>
+              </div>
+              <DateButton />
             </div>
 
-            <div className="input-group">
-              <input
-                {...fromReg}
-                type="number"
-                aria-label="First name"
-                className="form-control"
-                placeholder="0"
-                min={0}
-                onFocus={() => setActiveSide("from")}
-                onChange={(e) => {
-                  setActiveSide("from");
-                  fromReg.onChange(e);
-                }}
-              />
+            <div className="d-none d-md-block">
+              <InputGroup>
+                <Form.Control
+                  {...fromReg}
+                  type="number"
+                  aria-label="First name"
+                  placeholder="0"
+                  min={0}
+                  onFocus={() => setActiveSide("from")}
+                  onChange={(e) => {
+                    setActiveSide("from");
+                    fromReg.onChange(e);
+                  }}
+                />
 
-              <select {...register("fromCurrency")} className="form-select" aria-label="Default select example" value={fromCurrency}>
-                {currencies.map((dat) => (
-                  <option key={dat} value={dat}>
-                    {currenciesData && currenciesData[dat]?.name}
-                  </option>
-                ))}
-              </select>
+                <Form.Select
+                  {...register("fromCurrency")}
+                  aria-label="Default select example"
+                  value={fromCurrency}
+                >
+                  {currencies.map((dat) => (
+                    <option key={dat} value={dat}>
+                      {currenciesData && currenciesData[dat]?.name}
+                    </option>
+                  ))}
+                </Form.Select>
 
-              <input
-                {...toReg}
-                type="number"
-                aria-label="First name"
-                className="form-control"
-                placeholder="0"
-                min={0}
-                onFocus={() => setActiveSide("to")}
-                onChange={(e) => {
-                  setActiveSide("to");
-                  toReg.onChange(e);
-                }}
-              />
+                <Form.Control
+                  {...toReg}
+                  type="number"
+                  aria-label="First name"
+                  placeholder="0"
+                  min={0}
+                  onFocus={() => setActiveSide("to")}
+                  onChange={(e) => {
+                    setActiveSide("to");
+                    toReg.onChange(e);
+                  }}
+                />
 
-              <select {...register("toCurrency")} className="form-select" aria-label="Default select example" value={toCurrency}>
-                {currencies.map((dat) => (
-                  <option key={dat} value={dat}>
-                    {currenciesData && currenciesData[dat]?.name}
-                  </option>
-                ))}
-              </select>
+                <Form.Select
+                  {...register("toCurrency")}
+                  aria-label="Default select example"
+                  value={toCurrency}
+                >
+                  {currencies.map((dat) => (
+                    <option key={dat} value={dat}>
+                      {currenciesData && currenciesData[dat]?.name}
+                    </option>
+                  ))}
+                </Form.Select>
+              </InputGroup>
+            </div>
+
+            <div className="d-block d-md-none">
+              <Stack gap={3}>
+                <InputGroup>
+                  <Form.Control
+                    {...fromReg}
+                    type="number"
+                    aria-label="From amount"
+                    placeholder="0"
+                    min={0}
+                    onFocus={() => setActiveSide("from")}
+                    onChange={(e) => {
+                      setActiveSide("from");
+                      fromReg.onChange(e);
+                    }}
+                  />
+                  <Form.Select
+                    {...register("fromCurrency")}
+                    aria-label="From currency"
+                    value={fromCurrency}
+                  >
+                    {currencies.map((dat) => (
+                      <option key={dat} value={dat}>
+                        {currenciesData && currenciesData[dat]?.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </InputGroup>
+
+                <InputGroup>
+                  <Form.Control
+                    {...toReg}
+                    type="number"
+                    aria-label="To amount"
+                    placeholder="0"
+                    min={0}
+                    onFocus={() => setActiveSide("to")}
+                    onChange={(e) => {
+                      setActiveSide("to");
+                      toReg.onChange(e);
+                    }}
+                  />
+                  <Form.Select
+                    {...register("toCurrency")}
+                    aria-label="To currency"
+                    value={toCurrency}
+                  >
+                    {currencies.map((dat) => (
+                      <option key={dat} value={dat}>
+                        {currenciesData && currenciesData[dat]?.name}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </InputGroup>
+              </Stack>
             </div>
           </div>
         }
