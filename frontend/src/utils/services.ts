@@ -1,26 +1,23 @@
 import axios from "./httpService";
 
-function isTodaysDate(date: string): string | false {
+function isTodaysDate(date: string): boolean {
     const today = new Date().toISOString().slice(0, 10);
     // if incoming date equals today's date, return false
     if (date === today) return false;
-    // otherwise return 1 day older (YYYY-MM-DD)
-    const d = new Date(date); // expects "YYYY-MM-DD"
-    d.setDate(d.getDate() - 1);
-    return d.toISOString().slice(0, 10);
+    return true
 }
 
 const getCurrencies = async () => {
-    const res = await axios.get('/currencies?apikey=4E0VK7BnkdeUuh1vegAt808v2IUjzUR6lxcvBMT2')
+    const res = await axios.get('/currency-converter/currencies')
     return res.data
 }
 
 const getExchangeRate = async (base_currency: string, currency: string, date?: string) => {
     if (date && isTodaysDate(date as string)) {
-        const res = await axios.get(`/historical?apikey=4E0VK7BnkdeUuh1vegAt808v2IUjzUR6lxcvBMT2&base_currency=${base_currency}&currencies=${currency}&date=${date}`)
-        return res.data[date]
+        const res = await axios.get(`/currency-converter/exchange-rate?base_currency=${base_currency}&currency=${currency}&date=${date}`)
+        return res.data
     } else {
-        const res = await axios.get(`/latest?apikey=4E0VK7BnkdeUuh1vegAt808v2IUjzUR6lxcvBMT2&base_currency=${base_currency}&currencies=${currency}`)
+        const res = await axios.get(`/currency-converter/exchange-rate?base_currency=${base_currency}&currency=${currency}&date=${date}`)
         return res.data
     }
 }
