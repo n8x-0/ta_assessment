@@ -5,7 +5,7 @@ import { getExchangeRate } from "../../utils/services.ts";
 import DateButton from "./DatePicker.tsx";
 import { CurrencyConvertorContext, type CurrencyConvertorContextType } from "../../context/currencyConvertor/context.tsx";
 import localStorageService from "../../utils/localStorageService.ts";
-import { Row, Col, Stack, InputGroup, Form } from "react-bootstrap";
+import {  Stack, InputGroup, Form } from "react-bootstrap";
 
 interface CurrencyConverterformProps {
   isLoading: boolean;
