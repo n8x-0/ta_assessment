@@ -1,4 +1,4 @@
-import { Activity, useContext, useEffect, useRef, useState } from "react";
+import { Activity, useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Loader from "../shared/Loader.tsx";
 import { getExchangeRate } from "../../utils/services.ts";
@@ -97,11 +97,11 @@ const CurrencyConverterform = ({ isLoading, error, currenciesData }: CurrencyCon
 
   return (
     <div className="container py-5 d-flex justify-content-center align-items-center">
-      <Activity name="loader" mode={isLoading ? "vissible" : "hidden"} children={<Loader />} />
+      <Activity name="loader" mode={isLoading ? "visible" : "hidden"} children={<Loader />} />
 
       <Activity
         name="main-content"
-        mode={isLoading || error ? "hidden" : "vissible"}
+        mode={isLoading || error ? "hidden" : "visible"}
         children={
           <div className="">
             <div className="d-flex justify-content-between align-items-end my-3">
